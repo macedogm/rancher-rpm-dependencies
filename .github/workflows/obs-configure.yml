@@ -37,6 +37,7 @@ jobs:
       - name: DEBUG
         run: |
           git rev-parse --is-shallow-repository
+          git diff --name-only
           git diff --name-status ORIG_HEAD HEAD
 
       - name: Installing OSC
