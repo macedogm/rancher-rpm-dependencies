@@ -38,6 +38,7 @@ jobs:
         run: |
           git rev-parse --is-shallow-repository
           git diff --name-only
+          cat .git/HEAD
 
       - name: Installing OSC
         run: |
