@@ -36,6 +36,9 @@ jobs:
 
       - name: DEBUG
         run: |
+          git log
+	  echo "=================="
+          git reflog
           git rev-parse --is-shallow-repository
           git diff --name-only
           cat .git/HEAD
