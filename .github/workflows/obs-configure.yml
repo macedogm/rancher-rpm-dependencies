@@ -37,6 +37,7 @@ jobs:
 
       - name: DEBUG
         run: |
+          git clone https://github.com/macedogm/rancher-rpm-dependencies.git
           git log
           echo "=================="
           git reflog
