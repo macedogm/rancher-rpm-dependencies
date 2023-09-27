@@ -34,10 +34,10 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          clean: false
 
       - name: DEBUG
         run: |
-          git clone https://github.com/macedogm/rancher-rpm-dependencies.git
           git log
           echo "=================="
           git reflog
