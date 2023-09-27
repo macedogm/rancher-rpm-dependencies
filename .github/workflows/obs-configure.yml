@@ -35,7 +35,9 @@ jobs:
           fetch-depth: 0
 
       - name: DEBUG
-        run: git diff --name-status ORIG_HEAD HEAD
+        run: |
+          git rev-parse --is-shallow-repository
+          git diff --name-status ORIG_HEAD HEAD
 
       - name: Installing OSC
         run: |
