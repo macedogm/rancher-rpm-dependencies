@@ -1,0 +1,61 @@
+name: obs-build-pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+#  # TODO remove
+#  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    container: registry.opensuse.org/opensuse/tumbleweed:latest
+    steps:
+#      # TODO remove
+#      - name: Dumping env
+#        run: env
+#
+#      # TODO remove
+#      - name: Dumping GitHub context
+#        env:
+#          GITHUB_CONTEXT: ${{ toJson(github) }}
+#        run: echo "$GITHUB_CONTEXT"
+
+      # This is a workaround needed for the .git dir to be available inside the container
+      # See https://github.com/actions/checkout/issues/335
+      - name: Installing Git
+        run: |
+          zypper in -y git-core
+          git config --global --add safe.directory $(pwd)
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: DEBUG
+        run: git diff --name-status ORIG_HEAD HEAD
+
+      - name: Installing OSC
+        run: |
+          zypper in -y git-core python311-packaging obs-service-go_modules obs-service-recompress obs-service-set_version obs-service-tar_scm osc
+
+      - name: Configuring OSC
+        env:
+          OBS_USER: ${{ secrets.OBS_USER }}
+          OBS_PASS: ${{ secrets.OBS_PASS }}
+        run: |
+          mkdir -m 700 -p "${HOME}/.config/osc"
+          sed "s/OBS_USER/$OBS_USER/;s/OBS_PASS/$OBS_PASS/" rancher/oscrc > "${HOME}/.config/osc/oscrc"
+          chmod 600 "${HOME}/.config/osc/oscrc"
+
+      - name: Building packages
+#        env:
+#          GH_TOKEN: ${{ github.token }}
+#        run: export _BRANCH=${{ github.head_ref }} && ./scripts/obs_build_packages.sh
+        run: ./scripts/obs_build_packages.sh
+
+      - name: Removing OSC config
+        run: rm -rf .oscrc .osc
+
