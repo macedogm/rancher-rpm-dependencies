@@ -3,6 +3,7 @@
 set -eu
 
 OBS_PACKAGE_CONFIG="package_meta.xml"
+# TODO - improvement - get the home from the oscrc file when running local test builds
 OBS_PROJECT="home:gmacedo:rancher:devel:deps"
 CONFIG_FILES=("_service" "golangci-lint.spec" "package_meta.xml")
 MISSING_FILES=()
