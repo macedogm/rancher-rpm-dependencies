@@ -38,16 +38,9 @@ jobs:
 
       - name: DEBUG
         run: |
-          git log
-          echo "=================="
-          git reflog
-          echo "=================="
-          git clone git@github.com:macedogm/rancher-rpm-dependencies.git
-          echo "=================="
-          git rev-parse --is-shallow-repository
-          git diff --name-only
-          cat .git/HEAD
-          git diff --name-status ORIG_HEAD HEAD
+          pwd
+          ls -lha
+          ls -lha ..
 
       - name: Installing OSC
         run: |
