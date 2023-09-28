@@ -5,24 +5,12 @@ on:
     branches:
       - main
   pull_request:
-#  # TODO remove
-#  workflow_dispatch:
 
 jobs:
   ci:
     runs-on: ubuntu-latest
     container: registry.opensuse.org/opensuse/tumbleweed:latest
     steps:
-      # TODO remove
-      - name: Dumping env
-        run: env && echo $HOME
-#
-      # TODO remove
-      - name: Dumping GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
       # This is a workaround needed for the .git dir to be available inside the container
       # See https://github.com/actions/checkout/issues/335
       - name: Installing Git
@@ -35,14 +23,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           clean: false
-
-      - name: DEBUG
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          echo "============="
-          git diff --name-status HEAD^
-          echo "============="
 
       - name: Installing OSC
         run: |
@@ -58,9 +38,6 @@ jobs:
           chmod 600 "${HOME}/.config/osc/oscrc"
 
       - name: Building packages
-#        env:
-#          GH_TOKEN: ${{ github.token }}
-#        run: export _BRANCH=${{ github.head_ref }} && ./scripts/obs_build_packages.sh
         run: ./scripts/obs_build_packages.sh
 
       - name: Removing OSC config
