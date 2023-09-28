@@ -25,10 +25,10 @@ jobs:
 
       # This is a workaround needed for the .git dir to be available inside the container
       # See https://github.com/actions/checkout/issues/335
-      - name: Installing Git
-        run: |
-          zypper in -y git-core
-          git config --global --add safe.directory $(pwd)
+#      - name: Installing Git
+#        run: |
+#          zypper in -y git-core
+#          git config --global --add safe.directory $(pwd)
 
       - uses: actions/checkout@v4
         with:
