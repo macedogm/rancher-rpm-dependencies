@@ -54,6 +54,7 @@ jobs:
           cat $HOME/.gitconfig
           mkdir tmp && cd tmp
           git clone https://github.com/rancher/rancher.git
+          cd rancher && git diff --name-status ORIG_HEAD HEAD
 
       - name: Installing OSC
         run: |
