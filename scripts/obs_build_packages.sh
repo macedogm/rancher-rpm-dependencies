@@ -10,7 +10,7 @@ MISSING_FILES=()
 PKG_DIRS=()
 WKD_DIR="$(pwd)"
 PR_NUMBER=""
-MODIFIED_DIRS=$(git diff --name-status origin/main~ | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
+MODIFIED_DIRS=$(git diff --name-status --no-renames origin/main~ | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
 
 if [ -v GITHUB_REF_NAME ]; then
 	if [ "$GITHUB_REF_NAME" == "main" ]; then
