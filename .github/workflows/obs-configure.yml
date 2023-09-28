@@ -52,6 +52,7 @@ jobs:
           ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
           cat $HOME/.ssh/known_hosts
           cat $HOME/.gitconfig
+          mkdir tmp && cd tmp
           git clone https://github.com/rancher/rancher.git
 
       - name: Installing OSC
