@@ -43,8 +43,8 @@ jobs:
           pwd
           ls -lha
           whoami
-          git config user.name "your username"
-          git config user.password $GITHUB_TOKEN
+          git config --global user.name "your username"
+          git config --global user.password $GITHUB_TOKEN
           ls -lha
           ls -lha $HOME
           git clone git@github.com:macedogm/rancher-rpm-dependencies.git
