@@ -4,12 +4,12 @@
 #
 
 Name:           helm
-Version:        release-v3.11.3
+Version:        v3.11.3
 Release:        0
 Summary:        The Kubernetes Package Manager (Rancher's Helm fork)
 License:        Apache-2.0
 URL:            https://rancher-helm.run
-Source0:        %{name}-%{version}.tar.xz
+Source0:        %{name}-%{version}-rancher1.tar.xz
 Source1:        vendor.tar.xz
 BuildRequires:  go
 
