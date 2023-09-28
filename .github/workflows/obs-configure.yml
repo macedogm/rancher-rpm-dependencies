@@ -37,13 +37,17 @@ jobs:
           clean: false
 
       - name: DEBUG
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           pwd
           ls -lha
           whoami
           git config user.name "your username"
-          git config user.password "your password"
-          cat $HOME/.gitconfig
+          git config user.password $GITHUB_TOKEN
+          ls -lha
+          ls -lha $HOME
+          git clone git@github.com:macedogm/rancher-rpm-dependencies.git
 
       - name: Installing OSC
         run: |
