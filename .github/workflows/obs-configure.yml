@@ -40,6 +40,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          git diff --name-status HEAD^
+          echo "============="
           pwd
           ls -lha
           whoami
