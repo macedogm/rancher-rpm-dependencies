@@ -79,6 +79,7 @@ for f in ${PKG_DIRS[@]}; do
 		osc ci -m "committing $package_name"
 	else
 		echo "==> This is a local build - $package_name will not be submitted"
+		osc rdelete -m "deleting project" -r home:gmacedo:rancher:devel:deps "$package_name_pr_id"
 	fi
 
 	cd "$WKD_DIR"
