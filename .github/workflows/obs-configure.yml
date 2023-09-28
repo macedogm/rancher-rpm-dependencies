@@ -40,23 +40,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          echo "============="
           git diff --name-status HEAD^
           echo "============="
-          pwd
-          ls -lha
-          whoami
-          chmod 600 $HOME/.gitconfig
-          git config --global user.name "your username"
-          git config --global user.password $GITHUB_TOKEN
-          ls -lha
-          ls -lha $HOME
-          mkdir -m 700 $HOME/.ssh
-          ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
-          cat $HOME/.ssh/known_hosts
-          cat $HOME/.gitconfig
-          mkdir tmp && cd tmp
-          git clone https://github.com/rancher/rancher.git
-          cd rancher && git diff --name-status ORIG_HEAD HEAD
 
       - name: Installing OSC
         run: |
