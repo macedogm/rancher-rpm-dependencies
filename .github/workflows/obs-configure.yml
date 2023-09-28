@@ -11,6 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     container: registry.opensuse.org/opensuse/tumbleweed:latest
     steps:
+      - name: DEBUG
+        run: |
+          echo ${{ github.event.number  }}
+          echo ${{ github.event.pull_request.number }}
+          echo ${{ github.event.issue.number }}
+
       # This is a workaround needed for the .git dir to be available inside the container
       # See https://github.com/actions/checkout/issues/335
       - name: Installing Git
@@ -24,18 +30,6 @@ jobs:
           fetch-tags: true
           clean: false
 
-      - name: DEBUG
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo "========"
-          git diff --name-status origin/main~
-          echo "========"
-          env
-          echo "========"
-          echo "$GITHUB_CONTEXT"
-          echo "========"
-
       - name: Installing OSC
         run: |
           zypper in -y git-core python311-packaging obs-service-go_modules obs-service-recompress obs-service-set_version obs-service-tar_scm osc
@@ -46,12 +40,12 @@ jobs:
           OBS_PASS: ${{ secrets.OBS_PASS }}
         run: |
           mkdir -m 700 -p "${HOME}/.config/osc"
-          sed "s/OBS_USER/$OBS_USER/;s/OBS_PASS/$OBS_PASS/" rancher/oscrc > "${HOME}/.config/osc/oscrc"
+          sed "s/OBS_USER/$OBS_USER/;s/OBS_PASS/$OBS_PASS/" config/oscrc > "${HOME}/.config/osc/oscrc"
           chmod 600 "${HOME}/.config/osc/oscrc"
 
       - name: Building packages
         run: ./scripts/obs_build_packages.sh
 
       - name: Removing OSC config
-        run: rm -rf .oscrc .osc
+        run: rm -rf "${HOME}/.config/osc/oscrc" .osc
 
