@@ -24,6 +24,10 @@ jobs:
           fetch-tags: true
           clean: false
 
+      - name: DEBUG
+        run: |
+          git diff --name-status origin/main~
+
       - name: Installing OSC
         run: |
           zypper in -y git-core python311-packaging obs-service-go_modules obs-service-recompress obs-service-set_version obs-service-tar_scm osc
