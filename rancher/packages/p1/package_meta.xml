@@ -1,0 +1,5 @@
+<package name="p1">
+  <title>golanci-lint</title>
+  <description>RPM build of golanci-lint for Rancher</description>
+  <url>https://github.com/macedogm/rancher-rpm-dependencies</url>
+</package>
