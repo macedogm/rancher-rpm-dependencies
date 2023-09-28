@@ -13,15 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     container: registry.opensuse.org/opensuse/tumbleweed:latest
     steps:
-#      # TODO remove
-#      - name: Dumping env
-#        run: env
+      # TODO remove
+      - name: Dumping env
+        run: env && echo $HOME
 #
-#      # TODO remove
-#      - name: Dumping GitHub context
-#        env:
-#          GITHUB_CONTEXT: ${{ toJson(github) }}
-#        run: echo "$GITHUB_CONTEXT"
+      # TODO remove
+      - name: Dumping GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       # This is a workaround needed for the .git dir to be available inside the container
       # See https://github.com/actions/checkout/issues/335
@@ -41,6 +41,9 @@ jobs:
           git log
           echo "=================="
           git reflog
+          echo "=================="
+          git clone git@github.com:macedogm/rancher-rpm-dependencies.git
+          echo "=================="
           git rev-parse --is-shallow-repository
           git diff --name-only
           cat .git/HEAD
