@@ -2,16 +2,24 @@
 
 set -eu
 
-PROJECT_CONFIG_FILE="package_meta.xml"
+OBS_PACKAGE_CONFIG="package_meta.xml"
+# TODO - improvement - get the home from the oscrc file when running local test builds
+OBS_PROJECT="home:gmacedo:rancher:devel:deps"
 CONFIG_FILES=("_service" "golangci-lint.spec" "package_meta.xml")
 MISSING_FILES=()
 PKG_DIRS=()
 WKD_DIR="$(pwd)"
-PR_NUMBER="local_build"
+PR_NUMBER=""
 MODIFIED_DIRS=$(git diff --name-status origin/main~ | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
 
-if [ -v GITHUB_REF ]; then
-	PR_NUMBER=$(echo $GITHUB_REF | sed  "s/.*\/\([0-9]\+\)\/.*/\1/")
+if [ -v GITHUB_REF_NAME ]; then
+	if [ "$GITHUB_REF_NAME" == "main" ]; then
+		OBS_PROJECT="home:gmacedo:rancher:deps"
+	else
+		PR_NUMBER="-pr_$(echo $GITHUB_REF_NAME | sed 's/^\([0-9]\+\)\/merge$/\1/')"
+	fi
+else
+	PR_NUMBER="local_build"
 fi
 
 for d in ${MODIFIED_DIRS[@]}; do
@@ -45,10 +53,10 @@ if [ "${#PKG_DIRS[@]}" -eq 0 ]; then
 fi
 
 for f in ${PKG_DIRS[@]}; do
-	f="$f/$PROJECT_CONFIG_FILE"
+	f="$f/$OBS_PACKAGE_CONFIG"
  	package_name=$(grep -Po '<package name="\K.*?(?=")' "$f")
 
-	package_name_pr_id="${package_name}-pr_${PR_NUMBER}"
+	package_name_pr_id="${package_name}${PR_NUMBER}"
 	pkg_dir=$(dirname "$f")
 
 	tmp_dir="$(mktemp -d -p .)"
@@ -57,11 +65,11 @@ for f in ${PKG_DIRS[@]}; do
 	sed "s/<package\s\+name=\"$package_name\"/<package name=\"$package_name_pr_id\"/" "$f" > pkg.xml
 
 	echo "==> Creating/updating package $package_name"
-	osc meta pkg -F pkg.xml "home:gmacedo:rancher:devel:deps" "$package_name_pr_id"
-	osc init home:gmacedo:rancher:devel:deps "$package_name_pr_id"
+	osc meta pkg -F pkg.xml "$OBS_PROJECT" "$package_name_pr_id"
+	osc init "$OBS_PROJECT" "$package_name_pr_id"
 
 	mkdir -p "$package_name"
-	osc co -o "$package_name" home:gmacedo:rancher:devel:deps "$package_name_pr_id"
+	osc co -o "$package_name" "$OBS_PROJECT" "$package_name_pr_id"
 	cd "$package_name"
 
 	cp "$pkg_dir"/* .
@@ -79,16 +87,12 @@ for f in ${PKG_DIRS[@]}; do
 		osc ci -m "committing $package_name"
 	else
 		echo "==> This is a local build - $package_name will not be submitted"
-		osc rdelete -m "deleting project" -r home:gmacedo:rancher:devel:deps "$package_name_pr_id"
+		osc rdelete -m "deleting project" -r "$OBS_PROJECT" "$package_name_pr_id"
 	fi
 
 	cd "$WKD_DIR"
 	echo "==> Removing temporary working files"
 	rm -rf .osc "$tmp_dir"
 	echo ""
-
-	# TODO to delete the package
-	# no need to do osc init ...
-	# osc rdelete -m "deleting project" -r home:gmacedo:rancher:devel:deps golangci-lint-pr_1
 done
 
