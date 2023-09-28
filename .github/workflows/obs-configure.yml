@@ -25,8 +25,16 @@ jobs:
           clean: false
 
       - name: DEBUG
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
+          echo "========"
           git diff --name-status origin/main~
+          echo "========"
+          env
+          echo "========"
+          echo "$GITHUB_CONTEXT"
+          echo "========"
 
       - name: Installing OSC
         run: |
