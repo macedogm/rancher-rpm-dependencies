@@ -8,8 +8,7 @@ MISSING_FILES=()
 PKG_DIRS=()
 WKD_DIR="$(pwd)"
 PR_NUMBER="local_build"
-#MODIFIED_DIRS=$(git diff --name-status ORIG_HEAD HEAD | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
-MODIFIED_DIRS=$(git diff --name-status origin/main | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
+MODIFIED_DIRS=$(git diff --name-status origin/main~ | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
 
 if [ -v GITHUB_REF ]; then
 	PR_NUMBER=$(echo $GITHUB_REF | sed  "s/.*\/\([0-9]\+\)\/.*/\1/")
