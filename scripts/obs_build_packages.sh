@@ -9,17 +9,16 @@ CONFIG_FILES=("_service" "golangci-lint.spec" "package_meta.xml")
 MISSING_FILES=()
 PKG_DIRS=()
 WKD_DIR="$(pwd)"
-PR_NUMBER=""
+PR_NUMBER="local_build"
 MODIFIED_DIRS=$(git diff --name-status --no-renames origin/main~ | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
 
 if [ -v GITHUB_REF_NAME ]; then
 	if [ "$GITHUB_REF_NAME" == "main" ]; then
 		OBS_PROJECT="home:gmacedo:rancher:deps"
+		PR_NUMBER=""
 	else
 		PR_NUMBER="-pr_$(echo $GITHUB_REF_NAME | sed 's/^\([0-9]\+\)\/merge$/\1/')"
 	fi
-else
-	PR_NUMBER="local_build"
 fi
 
 for d in ${MODIFIED_DIRS[@]}; do
