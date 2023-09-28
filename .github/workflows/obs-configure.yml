@@ -52,7 +52,7 @@ jobs:
           ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
           cat $HOME/.ssh/known_hosts
           cat $HOME/.gitconfig
-          git clone git@github.com:macedogm/rancher-rpm-dependencies.git
+          git clone https://username:$GITHUB_TOKNE@github.com/macedogm/rancher-rpm-dependencies.git
 
       - name: Installing OSC
         run: |
