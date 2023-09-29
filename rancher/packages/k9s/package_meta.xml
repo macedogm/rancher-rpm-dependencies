@@ -1,5 +1,5 @@
 <package name="k9s">
   <title>k9s</title>
-  <description>RPM build of K9s for Rancher</description>
+  <description>RPM build of K9s for Rancher </description>
   <url>https://github.com/derailed/k9s</url>
 </package>
