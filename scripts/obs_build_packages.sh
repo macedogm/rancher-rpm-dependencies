@@ -9,7 +9,7 @@ CONFIG_FILES=("_service" ".spec" "package_meta.xml")
 MISSING_FILES=()
 PKG_DIRS=()
 WKD_DIR="$(pwd)"
-PR_NUMBER="local_build"
+PR_NUMBER="-local_build"
 MODIFIED_DIRS=$(git diff --name-status --no-renames origin/main~ | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
 
 if [ -v GITHUB_REF_NAME ]; then
@@ -73,6 +73,9 @@ for f in ${PKG_DIRS[@]}; do
 
 	cp "$pkg_dir"/* .
 	# TODO remove the old generated versioned tar.xz files
+	ls -lha
+	cat helm.spec
+
 
 	echo "==> Downloading artifacts"
 	osc service manualrun
