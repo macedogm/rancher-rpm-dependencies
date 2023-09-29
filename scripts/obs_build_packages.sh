@@ -5,11 +5,11 @@ set -eu
 OBS_PACKAGE_CONFIG="package_meta.xml"
 # TODO - improvement - get the home from the oscrc file when running local test builds
 OBS_PROJECT="home:gmacedo:rancher:devel:deps"
-CONFIG_FILES=("_service" "golangci-lint.spec" "package_meta.xml")
+CONFIG_FILES=("_service" ".spec" "package_meta.xml")
 MISSING_FILES=()
 PKG_DIRS=()
 WKD_DIR="$(pwd)"
-PR_NUMBER="local_build"
+PR_NUMBER="-local_build"
 MODIFIED_DIRS=$(git diff --name-status --no-renames origin/main~ | sed -n -e "s,^[^D].*\(rancher/packages/[^/]*\).*,\1,p" | sort -u)
 
 if [ -v GITHUB_REF_NAME ]; then
@@ -27,7 +27,7 @@ for d in ${MODIFIED_DIRS[@]}; do
 
 	ok_dir=true
 	for f in "${CONFIG_FILES[@]}"; do
-		if ! test -f "$f"; then
+		if ! test -f *"$f"; then
 			MISSING_FILES+=("$d/$f")
 			ok_dir=false
 		fi

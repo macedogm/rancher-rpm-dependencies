@@ -1,0 +1,5 @@
+<package name="helm">
+  <title>helm</title>
+  <description>RPM build of Rancher's Helm fork</description>
+  <url>https://github.com/macedogm/rancher-rpm-dependencies</url>
+</package>
