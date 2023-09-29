@@ -73,9 +73,6 @@ for f in ${PKG_DIRS[@]}; do
 
 	cp "$pkg_dir"/* .
 	# TODO remove the old generated versioned tar.xz files
-	ls -lha
-	cat helm.spec
-
 
 	echo "==> Downloading artifacts"
 	osc service manualrun
