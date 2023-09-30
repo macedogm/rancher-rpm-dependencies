@@ -1,4 +1,4 @@
-<package name="helm-3.11.3">
+<package name="helm3.11">
   <title>helm 3.11.3</title>
   <description>RPM build of Rancher's Helm fork 3.11.3</description>
   <url>https://github.com/macedogm/rancher-rpm-dependencies</url>
