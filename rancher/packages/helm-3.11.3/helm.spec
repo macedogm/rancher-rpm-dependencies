@@ -3,13 +3,13 @@
 # spec file for package rancher-helm
 #
 
-Name:           helm-3.11.3
+Name:           helm
 Version:        3.11.3
-Release:        0
+Release:        3.11.3
 Summary:        The Kubernetes Package Manager (Rancher's Helm fork)
 License:        Apache-2.0
 URL:            https://rancher-helm.run
-Source0:        helm-%{version}.tar.xz
+Source0:        ${name}-%{version}.tar.xz
 Source1:        vendor.tar.xz
 BuildRequires:  go
 
