@@ -28,15 +28,15 @@ GO111MODULE=on CGO_ENABLED=0 go build \
     -trimpath \
     -ldflags '-w -s -extldflags "-static"' \
     -mod=vendor \
-    -o %{name} ./cmd/%{name}
+    -o helm ./cmd/helm
 
 %install
-install -D -m 0755 %{name} "%{buildroot}/%{_bindir}/%{name}"
+install -D -m 0755 helm "%{buildroot}/%{_bindir}/helm"
 
 %files
 %doc README.md
 %license LICENSE
-%{_bindir}/%{name}
+%{_bindir}/helm
 
 %changelog
 
