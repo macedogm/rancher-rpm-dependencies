@@ -3,8 +3,8 @@
 # spec file for package rancher-helm
 #
 
-Name:           helm-3.11.3
-Version:        3.11.3
+Name:           helm3.12
+Version:        3.12.3
 Release:        0
 Summary:        The Kubernetes Package Manager (Rancher's Helm fork)
 License:        Apache-2.0
