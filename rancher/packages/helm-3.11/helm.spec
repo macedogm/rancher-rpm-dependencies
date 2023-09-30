@@ -13,7 +13,6 @@ Source0:        helm-%{version}.tar.xz
 Source1:        vendor.tar.xz
 BuildRequires:  go
 Conflicts:      helm
-Conflicts:      helm-
 
 %description
 Helm is a tool for managing Charts. Charts are packages of pre-configured Kubernetes resources.
