@@ -19,6 +19,14 @@ jobs:
     container: ghcr.io/macedogm/rancher-obs-image:latest
     if: github.ref == 'refs/heads/main'
     steps:
+      # This is a workaround needed for the .git dir to be available inside the container
+      # See https://github.com/actions/checkout/issues/335
+      - name: Configuring Git
+        run: git config --global --add safe.directory $(pwd)
+
+      - uses: actions/checkout@v4
+        with:
+
       - name: Delete leftover branches
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
