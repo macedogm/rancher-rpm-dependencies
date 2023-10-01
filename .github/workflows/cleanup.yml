@@ -5,6 +5,13 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: read
+  pull-requests: read
+  statuses: read
 
 jobs:
   ci:
@@ -12,8 +19,9 @@ jobs:
     container: ghcr.io/macedogm/rancher-obs-image:latest
     if: github.ref == 'refs/heads/main'
     steps:
-#              git push origin --delete "$branch";
       - name: Delete leftover branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "list of closed/merged PRs branches"
           gh pr list --search "is:closed is:pr" --json headRefName --jq ".[].headRefName" | sort -u > dead_branches.txt
@@ -21,7 +29,8 @@ jobs:
           gh pr list  --search "is:open is:pr" --json headRefName  --jq ".[].headRefName" | sort -u > live_branches.txt
           for branch in $(comm -23 dead_branches.txt live_branches.txt); do
             if (git ls-remote --exit-code --heads origin "$branch"); then
-              echo "Deleting leftover UpdateCLI branch - $branch";
+              echo "Deleting leftover branch - $branch";
+              git push origin --delete "$branch";
             fi
           done
 
