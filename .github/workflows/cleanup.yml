@@ -12,11 +12,7 @@ jobs:
     container: ghcr.io/macedogm/rancher-obs-image:latest
     if: github.ref == 'refs/heads/main'
     steps:
-#      # This is a workaround needed for the .git dir to be available inside the container
-#      # See https://github.com/actions/checkout/issues/335
-#      - name: Configuring Git
-#        run: git config --global --add safe.directory $(pwd)
-
+#              git push origin --delete "$branch";
       - name: Delete leftover branches
         run: |
           echo "list of closed/merged PRs branches"
@@ -26,7 +22,6 @@ jobs:
           for branch in $(comm -23 dead_branches.txt live_branches.txt); do
             if (git ls-remote --exit-code --heads origin "$branch"); then
               echo "Deleting leftover UpdateCLI branch - $branch";
-#              git push origin --delete "$branch";
             fi
           done
 
