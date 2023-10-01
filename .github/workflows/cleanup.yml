@@ -1,0 +1,44 @@
+name: cleanup
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    container: ghcr.io/macedogm/rancher-obs-image:latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+#      # This is a workaround needed for the .git dir to be available inside the container
+#      # See https://github.com/actions/checkout/issues/335
+#      - name: Configuring Git
+#        run: git config --global --add safe.directory $(pwd)
+
+      - name: Delete leftover branches
+        run: |
+          echo "list of closed/merged PRs branches"
+          gh pr list --search "is:closed is:pr" --json headRefName --jq ".[].headRefName" | sort -u > dead_branches.txt
+          echo "list of open PRs branches"
+          gh pr list  --search "is:open is:pr" --json headRefName  --jq ".[].headRefName" | sort -u > live_branches.txt
+          for branch in $(comm -23 dead_branches.txt live_branches.txt); do
+            if (git ls-remote --exit-code --heads origin "$branch"); then
+              echo "Deleting leftover UpdateCLI branch - $branch";
+#              git push origin --delete "$branch";
+            fi
+          done
+
+#      - name: Configuring OSC
+#        env:
+#          OBS_USER: ${{ secrets.OBS_USER }}
+#          OBS_PASS: ${{ secrets.OBS_PASS }}
+#        run: |
+#          mkdir -m 700 -p "${HOME}/.config/osc"
+#          sed "s/OBS_USER/$OBS_USER/;s/OBS_PASS/$OBS_PASS/" config/oscrc > "${HOME}/.config/osc/oscrc"
+#          chmod 600 "${HOME}/.config/osc/oscrc"
+
+#      - name: Removing OSC config
+#        run: rm -rf "${HOME}/.config/osc/oscrc" .osc
+
