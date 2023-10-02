@@ -52,6 +52,8 @@ jobs:
 
 #           osc ls home:gmacedo:rancher:devel:deps
       - name: Deleting leftover packages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr list --search "is:closed is:pr" \
                      --json number \
