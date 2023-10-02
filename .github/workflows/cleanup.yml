@@ -28,15 +28,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "List of closed/merged PRs branches"
           gh pr list --search "is:closed is:pr" \
                      --json headRefName         \
-                     --jq ".[].headRefName" | sort -u > dead_branches.txt
-          echo "List of open PRs branches"
+                     --jq ".[].headRefName" | sort -u > closed_branches.txt
           gh pr list  --search "is:open is:pr" \
                       --json headRefName       \
-                      --jq ".[].headRefName" | sort -u > live_branches.txt
-          for branch in $(comm -23 dead_branches.txt live_branches.txt); do
+                      --jq ".[].headRefName" | sort -u > open_branches.txt
+          for branch in $(comm -23 closed_branches.txt open_branches.txt); do
             if (git ls-remote --exit-code --heads origin "$branch"); then
               echo "Deleting leftover branch - $branch";
               git push origin --delete "$branch";
@@ -52,13 +50,20 @@ jobs:
           sed "s/OBS_USER/$OBS_USER/;s/OBS_PASS/$OBS_PASS/" config/oscrc > "${HOME}/.config/osc/oscrc"
           chmod 600 "${HOME}/.config/osc/oscrc"
 
-#	Get all pkgs in dev
-#		Check the pr number at the end ..._pr_X
-#		if PR X is not open/draft, then delete pkg
-
 #           osc ls home:gmacedo:rancher:devel:deps
       - name: Deleting leftover packages
-        run: ls -lha
+        run: |
+          gh pr list --search "is:closed is:pr" \
+                     --json number \
+                     --jq ".[].number" | sort -u  > closed_prs.txt
+          osc ls home:gmacedo:rancher:devel:deps > packages.txt
+          rm -rf packages_to_remote.txt
+          for pr in $(cat closed_prs.txt); do
+            grep -e "-pr_${pr}$" packages.txt >> to_remote.txt
+          done
+          for pkg in $(to_remote.txt); do
+             echo "Deleting leftover package - $pkg"
+          done
 
       - name: Removing OSC config
         run: rm -rf "${HOME}/.config/osc/oscrc" .osc
