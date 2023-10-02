@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  schedule:
+    # Runs at midnight UTC
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -50,7 +53,6 @@ jobs:
           sed "s/OBS_USER/$OBS_USER/;s/OBS_PASS/$OBS_PASS/" config/oscrc > "${HOME}/.config/osc/oscrc"
           chmod 600 "${HOME}/.config/osc/oscrc"
 
-#           osc ls home:gmacedo:rancher:devel:deps
       - name: Deleting leftover packages
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,6 +64,7 @@ jobs:
           for pr in $(cat closed_prs.txt); do
             for pkg in $(grep -e "-pr_${pr}$" packages.txt); do
               echo "Deleting leftover package - $pkg"
+              osc rdelete "home:gmacedo:rancher:devel:deps" "$pkg" -m "delete pkg"
             done
           done
 
