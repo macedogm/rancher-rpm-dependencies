@@ -59,12 +59,10 @@ jobs:
                      --json number \
                      --jq ".[].number" | sort -u  > closed_prs.txt
           osc ls "home:gmacedo:rancher:devel:deps" > packages.txt
-          rm -rf packages_to_remove.txt
           for pr in $(cat closed_prs.txt); do
-            grep -e "-pr_${pr}$" packages.txt >> packages_to_remove.txt
-          done
-          for pkg in $(cat packages_to_remove.txt); do
-             echo "Deleting leftover package - $pkg"
+            for pkg in $(grep -e "-pr_${pr}$" packages.txt); do
+              echo "Deleting leftover package - $pkg"
+            done
           done
 
       - name: Removing OSC config
