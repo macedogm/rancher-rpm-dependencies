@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -17,7 +16,6 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     container: ghcr.io/macedogm/rancher-obs-image:latest
-    if: github.ref == 'refs/heads/main'
     steps:
       # This is a workaround needed for the .git dir to be available inside the container
       # See https://github.com/actions/checkout/issues/335
@@ -26,14 +24,18 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Delete leftover branches
+      - name: Deleting leftover branches
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "list of closed/merged PRs branches"
-          gh pr list --search "is:closed is:pr" --json headRefName --jq ".[].headRefName" | sort -u > dead_branches.txt
-          echo "list of open PRs branches"
-          gh pr list  --search "is:open is:pr" --json headRefName  --jq ".[].headRefName" | sort -u > live_branches.txt
+          echo "List of closed/merged PRs branches"
+          gh pr list --search "is:closed is:pr" \
+                     --json headRefName         \
+                     --jq ".[].headRefName" | sort -u > dead_branches.txt
+          echo "List of open PRs branches"
+          gh pr list  --search "is:open is:pr" \
+                      --json headRefName       \
+                      --jq ".[].headRefName" | sort -u > live_branches.txt
           for branch in $(comm -23 dead_branches.txt live_branches.txt); do
             if (git ls-remote --exit-code --heads origin "$branch"); then
               echo "Deleting leftover branch - $branch";
@@ -41,15 +43,23 @@ jobs:
             fi
           done
 
-#      - name: Configuring OSC
-#        env:
-#          OBS_USER: ${{ secrets.OBS_USER }}
-#          OBS_PASS: ${{ secrets.OBS_PASS }}
-#        run: |
-#          mkdir -m 700 -p "${HOME}/.config/osc"
-#          sed "s/OBS_USER/$OBS_USER/;s/OBS_PASS/$OBS_PASS/" config/oscrc > "${HOME}/.config/osc/oscrc"
-#          chmod 600 "${HOME}/.config/osc/oscrc"
+      - name: Configuring OSC
+        env:
+          OBS_USER: ${{ secrets.OBS_USER }}
+          OBS_PASS: ${{ secrets.OBS_PASS }}
+        run: |
+          mkdir -m 700 -p "${HOME}/.config/osc"
+          sed "s/OBS_USER/$OBS_USER/;s/OBS_PASS/$OBS_PASS/" config/oscrc > "${HOME}/.config/osc/oscrc"
+          chmod 600 "${HOME}/.config/osc/oscrc"
 
-#      - name: Removing OSC config
-#        run: rm -rf "${HOME}/.config/osc/oscrc" .osc
+#	Get all pkgs in dev
+#		Check the pr number at the end ..._pr_X
+#		if PR X is not open/draft, then delete pkg
+
+#           osc ls home:gmacedo:rancher:devel:deps
+      - name: Deleting leftover packages
+        run: ls -lha
+
+      - name: Removing OSC config
+        run: rm -rf "${HOME}/.config/osc/oscrc" .osc
 
