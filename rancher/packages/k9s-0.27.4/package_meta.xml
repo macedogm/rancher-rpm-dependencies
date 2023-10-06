@@ -1,0 +1,5 @@
+<package name="k9s-0.27.4">
+  <title>k9s 0.27.4</title>
+  <description>RPM build of K9s 0.27.4 for Rancher</description>
+  <url>https://github.com/macedogm/rancher-rpm-dependencies</url>
+</package>

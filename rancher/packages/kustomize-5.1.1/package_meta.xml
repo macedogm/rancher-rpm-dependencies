@@ -1,0 +1,5 @@
+<package name="kustomize-5.1.1">
+  <title>Kustomize 5.1.1</title>
+  <description>RPM build of Kustomize 5.1.1. for Rancher</description>
+  <url>https://github.com/macedogm/rancher-rpm-dependencies</url>
+</package>
