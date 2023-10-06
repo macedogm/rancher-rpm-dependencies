@@ -20,7 +20,7 @@ K9s provides a terminal UI to interact with your Kubernetes clusters. The aim of
 
 %build
 CGO_ENABLED=0 go build \
-    -ldflags '-w -s "-static"' \
+    -ldflags '-w -s -extldflags "-static"' \
     -mod=vendor \
     -o %{name} main.go
 
