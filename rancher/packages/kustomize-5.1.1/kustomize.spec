@@ -73,8 +73,7 @@ Fish command line completion support for %{name}.
 cd kustomize
 mv ../vendor .
 %goprep %provider_prefix
-BUILD_DATE=$(date --utc --date="@${SOURCE_DATE_EPOCH}" "+%Y-%m-%dT%H:%M:%SZ")
-%gobuild -mod vendor -buildmode=pie -ldflags="-s -X sigs.k8s.io/kustomize/api/provenance.version=%{version} -X sigs.k8s.io/kustomize/api/provenance.buildDate=${BUILD_DATE}" .
+%gobuild -mod vendor -buildmode=pie -ldflags="-s -X sigs.k8s.io/kustomize/api/provenance.version=%{version}" .
 
 %install
 %goinstall
